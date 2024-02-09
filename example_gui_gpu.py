@@ -17,7 +17,7 @@ class Behavier2(Behavior):
 
     def forward(self, ng):
         ng.trace += (ng.spikes)*0.25 - ng.trace/self.tau
-        # time.s
+        # time.sleep(1)
 
 class VisModule(Behavior):
     def initialize(self, ng):
@@ -100,4 +100,5 @@ net.initialize()
 
 from visualizer.Visualize_OpenGL_IMGUI import GUI
 
-GUI(net).initializeOpenGL()
+# GUI(net).initializeOpenGL()
+GUI(net).MultiThreadRun()

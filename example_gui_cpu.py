@@ -100,4 +100,5 @@ net.initialize()
 
 from visualizer.Visualize_OpenGL_IMGUI import GUI
 
-GUI(net).initializeOpenGL()
+# GUI(net).initializeOpenGL()
+GUI(net).MultiThreadRun()

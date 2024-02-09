@@ -49,7 +49,43 @@ class GUI(IMGUI):
         # fShaderFile = open("./visualizer/default.fs")
         self.FRAGMENT_SHADER = fShaderFile.read()
         fShaderFile.close()
-    def initializeOpenGL(self):
+
+    def MultiThreadRun(self):
+        
+        import threading
+        def thread_a ():
+            lastTime = time.time()
+            self.maxIterationInSecond = 0
+            self.iterationPerSecond = 0
+            self.run = True
+            while self.run:
+                currentTime = time.time()
+                timeDiff = currentTime - lastTime
+                # tensor += 0.0001
+
+                if self.maxIterationInSecond !=0 and timeDiff >= 1.0 / self.maxIterationInSecond:
+                    self.network.simulate_iteration()
+                    # print("DDDDDDDD: ",self.maxIterationInSecond)
+                    self.iteration += 1
+                    if self.network.device == 'cpu':pass
+                    else:torch.cuda.synchronize()
+                    self.oneVertexTrace = np.roll(self.oneVertexTrace, -1)
+                    self.oneVertexTrace[-1] = self.tensors[self.selectedGroup][self.selectedY][self.selectedX].item()
+                    self.iterationPerSecond += 1
+                    self.ignoreBeforeOneVertexTrace -= 1
+                    lastTime = currentTime
+                time.sleep(0.001)
+                
+        def thread_b ():
+            self.initializeOpenGL(True)
+        thread1 = threading.Thread(target=thread_a)
+        thread2 = threading.Thread(target=thread_b)
+        thread1.start()
+        thread2.start()
+        thread1.join()
+        thread2.join()
+        
+    def initializeOpenGL(self, runMulti = False):
         def find_numbers_close_to_sqrt(c):
             sqrt_c = int(c ** 0.5)
             a = sqrt_c
@@ -256,8 +292,8 @@ class GUI(IMGUI):
         self.MainWindow = MainWindow(self.width, self.height, self)
         print("INITGL DONE")
 
-        self.renderOpenGL()
-    def renderOpenGL(self):
+        self.renderOpenGL(runMulti)
+    def renderOpenGL(self, runMulti = False):
         # io = imgui.get_io()
         # io.config_flags |= imgui.ConfigFlags_.nav_enable_keyboard  # Enable Keyboard Controls
         # # io.config_flags |= imgui.ConfigFlags_.nav_enable_gamepad # Enable Gamepad Controls
@@ -279,7 +315,7 @@ class GUI(IMGUI):
         lastTime = time.time()
         lastTime2 = lastTime
         frameNumber = 0
-        iterationPerSecond = 0
+        self.iterationPerSecond = 0
         self.model = glm.mat4(1.0)
         self.model = glm.translate(self.model, glm.vec3(0.0, 0.0, 0.0))
         self.Position  = glm.vec3(0.0, 0.0, 1.5)
@@ -297,26 +333,27 @@ class GUI(IMGUI):
             self.Begin()
 
             currentTime = time.time()
-            timeDiff = currentTime - lastTime
             timeDiff2 = currentTime - lastTime2
             frameNumber += 1
             # tensor += 0.0001
 
-            if self.maxIterationInSecond !=0 and timeDiff >= 1.0 / self.maxIterationInSecond:
-                self.network.simulate_iteration()
-                self.iteration += 1
-                if self.network.device == 'cpu':pass
-                else:torch.cuda.synchronize()
-                self.oneVertexTrace = np.roll(self.oneVertexTrace, -1)
-                self.oneVertexTrace[-1] = self.tensors[self.selectedGroup][self.selectedY][self.selectedX].item()
-                iterationPerSecond += 1
-                self.ignoreBeforeOneVertexTrace -= 1
-                lastTime = currentTime
+            if not runMulti:
+                timeDiff = currentTime - lastTime
+                if self.maxIterationInSecond !=0 and timeDiff >= 1.0 / self.maxIterationInSecond:
+                    self.network.simulate_iteration()
+                    self.iteration += 1
+                    if self.network.device == 'cpu':pass
+                    else:torch.cuda.synchronize()
+                    self.oneVertexTrace = np.roll(self.oneVertexTrace, -1)
+                    self.oneVertexTrace[-1] = self.tensors[self.selectedGroup][self.selectedY][self.selectedX].item()
+                    self.iterationPerSecond += 1
+                    self.ignoreBeforeOneVertexTrace -= 1
+                    lastTime = currentTime
 
             if timeDiff2 >= 1.0 / 1:
-                glfw.set_window_title(self.glfw_window, "IterationsPerSecond: "+str(iterationPerSecond)+" FPS: "+str(int((1.0 / timeDiff2) * frameNumber)))
+                glfw.set_window_title(self.glfw_window, "IterationsPerSecond: "+str(self.iterationPerSecond)+" FPS: "+str(int((1.0 / timeDiff2) * frameNumber)))
                 frameNumber = 0
-                iterationPerSecond = 0
+                self.iterationPerSecond = 0
                 lastTime2 = currentTime
             
             self.RenderGUI()
@@ -331,7 +368,7 @@ class GUI(IMGUI):
 
             self.End()
             
-
+        self.run = False
         ## Cleanup
         glDeleteProgram(self.shader_program)
         for n in range(len(self.network.NeuronGroups)):
