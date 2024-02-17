@@ -186,6 +186,7 @@ class IMGUI:
         imgui.begin("NeuronGroups:")
         for i in range(len(self.network.NeuronGroups)):
             imgui.text("NeuronGroup {0}".format(str(i)))
+            # imgui.separator_text("NeuronGroup {0}".format(str(i)))
             # imgui.same_line()
             if self.shows[i]:
                 # if i>2:
@@ -207,6 +208,19 @@ class IMGUI:
             imgui.same_line(spacing=1.0)
             if (imgui.image_button("info"*(i+1),self.settingtextureID[i],imgui.ImVec2(25,25))):
                 pass
+
+            
+            # if (imgui.tree_node("Window "+str(i))):
+            #     imgui.text("width:")
+            #     _,self.NeuronWindows[i].widthNeuron=imgui.input_int("                            ",self.NeuronWindows[i].widthNeuron)
+            #     # imgui.checkbox_flags("io.BackendFlags: HasGamepad", &io.BackendFlags, ImGuiBackendFlags_HasGamepad);
+            #     # imgui.checkbox_flags("io.BackendFlags: HasMouseCursors", &io.BackendFlags, ImGuiBackendFlags_HasMouseCursors);
+            #     # imgui.checkbox_flags("io.BackendFlags: HasSetMousePos", &io.BackendFlags, ImGuiBackendFlags_HasSetMousePos);
+            #     # imgui.checkbox_flags("io.BackendFlags: RendererHasVtxOffset", &io.BackendFlags, ImGuiBackendFlags_RendererHasVtxOffset);
+            #     imgui.begin_disabled();
+            #     imgui.end_disabled();
+            #     imgui.tree_pop();
+            #     imgui.spacing();
         imgui.end()
 
 
@@ -247,6 +261,16 @@ class IMGUI:
             if not isClose:
                 self.NeuronWindows.pop(w)
                 break
+            imgui.begin("Info scene %s N:%s"%(str(w),self.NeuronWindows[w].NeuronIndex))
+            _, self.NeuronWindows[w].widthNeuron = imgui.input_int("width:",self.NeuronWindows[w].widthNeuron)
+            if self.NeuronWindows[w].widthNeuron <= 0 : self.NeuronWindows[w].widthNeuron = 1
+            _, self.NeuronWindows[w].heightNeuron = imgui.input_int("height:",self.NeuronWindows[w].heightNeuron)
+            if self.NeuronWindows[w].heightNeuron <= 0 : self.NeuronWindows[w].heightNeuron = 1
+            # _, self.NeuronWindows[w].depthNeuron = imgui.input_int("depth:",self.NeuronWindows[w].depthNeuron)
+            from math import ceil
+            imgui.text("depth: %i"%ceil((self.tensorWidths[self.NeuronWindows[w].NeuronIndex]/self.NeuronWindows[w].widthNeuron)*(self.tensorHeights[self.NeuronWindows[w].NeuronIndex]/self.NeuronWindows[w].heightNeuron)))
+
+            imgui.end()
     def EnableDoking(self):
             viewport = imgui.get_main_viewport()
             imgui.set_next_window_pos(viewport.work_pos)

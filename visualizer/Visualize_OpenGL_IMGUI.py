@@ -188,6 +188,9 @@ class GUI(IMGUI):
         self.uniform_location_model = glGetUniformLocation(self.shader_program,"model")
         self.uniform_location_isplan = glGetUniformLocation(self.shader_program,"uPlan")
         self.uniform_location_isNewWindow = glGetUniformLocation(self.shader_program,"uisNewWindow")
+        self.uniform_location_num_row = glGetUniformLocation(self.shader_program,"uRow")
+        self.uniform_location_num_col = glGetUniformLocation(self.shader_program,"uCol")
+        self.uniform_location_num_col_in_one = glGetUniformLocation(self.shader_program,"uNumColInOne")
 
         self.vaos = glGenVertexArrays(len(self.network.NeuronGroups))
         self.vbos = glGenBuffers(len(self.network.NeuronGroups))
@@ -224,11 +227,17 @@ class GUI(IMGUI):
             for i in range(tensorWidth):
                 for j in range(tensorHeight):
                     # vertices[index+0] = -1+1/4+(i+1)*2*(6/8)/(tensorWidth+1)
-                    vertices[index+0] = -1+(i+1)*2/(tensorWidth+1)
-                    vertices[index+1] = -1+(j+1)*2/(tensorHeight+1)
+                    # vertices[index+0] = -1+(i+1)*2/(tensorWidth+1)
+                    # vertices[index+1] = -1+(j+1)*2/(tensorHeight+1)
+                    # vertices[index+2] = 0.0
+                    # vertices[index+3] = (i+1)/(tensorWidth+1)
+                    # vertices[index+4] = (j+1)/(tensorHeight+1)
+                    vertices[index+0] = i+1
+                    vertices[index+1] = j+1
                     vertices[index+2] = 0.0
                     vertices[index+3] = (i+1)/(tensorWidth+1)
                     vertices[index+4] = (j+1)/(tensorHeight+1)
+
                     index +=5
             vertices[index+0] = 7/8
             vertices[index+1] = 0.0

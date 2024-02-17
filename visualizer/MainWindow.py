@@ -47,11 +47,15 @@ class MainWindow(Window):
             glEnableVertexAttribArray(1)
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*4, ctypes.c_void_p(0+3*4))
             glBindTexture(GL_TEXTURE_2D, self.upper.colors[n])
+            glUniform1f(self.upper.uniform_location_num_row, self.upper.tensorHeights[n]) 
+            glUniform1f(self.upper.uniform_location_num_col, self.upper.tensorWidths[n]) 
             glUniform1f(self.upper.uniform_location_z, -1/2*n) 
             # glBegin(GL_LINE_STRIP) 
             if self.upper.selectedGroup == n and self.upper.selectedX != -1 and self.upper.selectedY != -1:
-                glUniform1f(self.upper.uniform_location_loc_mac_x, -1+(self.upper.selectedX+1)*2/(self.upper.tensorWidths[n]+1))
-                glUniform1f(self.upper.uniform_location_loc_mac_y, -1+(self.upper.selectedY+1)*2/(self.upper.tensorHeights[n]+1)) 
+                glUniform1f(self.upper.uniform_location_loc_mac_x, self.upper.selectedX+1)
+                # glUniform1f(self.upper.uniform_location_loc_mac_x, -1+(self.upper.selectedX+1)*2/(self.upper.tensorWidths[n]+1))
+                # glUniform1f(self.upper.uniform_location_loc_mac_y, -1+(self.upper.selectedY+1)*2/(self.upper.tensorHeights[n]+1)) 
+                glUniform1f(self.upper.uniform_location_loc_mac_y, self.upper.selectedY+1)
             else:
                 glUniform1f(self.upper.uniform_location_loc_mac_x, 0)
                 glUniform1f(self.upper.uniform_location_loc_mac_y, 0) 
@@ -66,9 +70,9 @@ class MainWindow(Window):
 
 
             #!
-            self.addQuad(-1/2*n)
+            self.addQuad(-1/2*n,n)
         
-    def addQuad(self,z_value):
+    def addQuad(self,z_value,n):
         glUniform1f(self.upper.uniform_location_z, z_value)
         glUniform1f(self.upper.uniform_location_isdata, 0.0)
         # glUseProgram(0)
@@ -80,10 +84,15 @@ class MainWindow(Window):
         # glFrontFace(GL_CW)  
         # glColor3f(1, 1, 0)
         glBegin(GL_QUADS)
-        glVertex3f(-0.99, -0.99,0)
-        glVertex3f(-0.99, 0.99,0)
-        glVertex3f(0.99, 0.99,0)
-        glVertex3f(0.99, -0.99,0)
+        glVertex3f(0.0 ,0.0,0)
+        # print("n: ",n,"W: ",self.upper.tensorWidths[n],"H: ",self.upper.tensorHeights[n])
+        glVertex3f(0.0 ,self.upper.tensorHeights[n]+1,0)
+        glVertex3f(self.upper.tensorWidths[n]+1 ,self.upper.tensorHeights[n]+1,0)
+        glVertex3f(self.upper.tensorWidths[n]+1 ,0.0,0)
+        # glVertex3f(-0.99, -0.99,0)
+        # glVertex3f(-0.99, 0.99,0)
+        # glVertex3f(0.99, 0.99,0)
+        # glVertex3f(0.99, -0.99,0)
         glEnd()
         # glFrontFace(GL_CCW )
         # glUseProgram(self.shader_program)
