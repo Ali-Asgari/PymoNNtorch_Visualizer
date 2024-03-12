@@ -6,9 +6,13 @@ class NeuronWindow(Window):
     def __init__(self,width, height,upper,NeuronIndex):
         Window.__init__(self,width, height,upper)
         self.NeuronIndex = NeuronIndex
-        self.widthNeuron = self.upper.tensorWidths[self.NeuronIndex]
-        self.heightNeuron = self.upper.tensorHeights[self.NeuronIndex]
-        self.depthNeuron = 1
+        # self.widthNeuron = self.upper.tensorWidths[self.NeuronIndex]
+        # self.heightNeuron = self.upper.tensorHeights[self.NeuronIndex]
+        # self.depthNeuron = 1
+        self.widthNeuron = self.upper.network.NeuronGroups[self.NeuronIndex].width
+        self.heightNeuron = self.upper.network.NeuronGroups[self.NeuronIndex].height
+
+
     def Draw(self):
         # self.camera_windows[w].OnUpdateCamera(self.width_windows[w],self.heigh_windows[w])
         X=((torch.reshape(self.upper.tensors[self.NeuronIndex], (1,self.upper.tensorHeights[self.NeuronIndex]*self.upper.tensorWidths[self.NeuronIndex]))).squeeze(0)).reshape(self.upper.tensorHeights[self.NeuronIndex]*self.upper.tensorWidths[self.NeuronIndex],1)
