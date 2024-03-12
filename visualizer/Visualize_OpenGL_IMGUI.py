@@ -335,8 +335,6 @@ class GUI(IMGUI):
         self.camera = Camera(self)
         # glfw.swap_interval(1)
         self.initIcon()
-        self.show_demo_window = True
-        self.show_demo_window2 = True
 
         while not glfw.window_should_close(self.glfw_window):
             self.Begin()
