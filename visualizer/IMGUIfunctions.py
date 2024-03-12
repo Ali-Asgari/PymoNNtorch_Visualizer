@@ -28,6 +28,10 @@ class IMGUI:
         self.darkMod = True
         self.debugging = ""
         self.NeuronWindows = []
+
+        self.show_demo_window = False
+        self.show_demo_window2 = False
+        self.show_debuggin = False
     def initIcon(self):
         def opentIcon(location):
             img = Image.open(location)
@@ -55,7 +59,7 @@ class IMGUI:
         self.eyetextureID = [opentIcon(os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+"/icons/icons8-eye-96.png") for _ in range(len(self.network.NeuronGroups))]
         self.closeEyetextureID = [opentIcon(os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+"/icons/icons8-hide-96.png") for _ in range(len(self.network.NeuronGroups))]
         self.arrowtextureID = [opentIcon(os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+"/icons/arrow-up-right-1-16.png") for _ in range(len(self.network.NeuronGroups))]
-        self.settingtextureID = [opentIcon(os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+"/icons/icons8-info-100.png") for _ in range(len(self.network.NeuronGroups))]
+        # self.settingtextureID = [opentIcon(os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+"/icons/icons8-info-100.png") for _ in range(len(self.network.NeuronGroups))]
 
         # self.eyetextureID = [opentIcon("./visualizer/icons/icons8-eye-96(2).png") for _ in range(len(self.network.NeuronGroups))]
         # self.closeEyetextureID = [opentIcon("./visualizer/icons/icons8-hide-96.png") for _ in range(len(self.network.NeuronGroups))]
@@ -80,11 +84,10 @@ class IMGUI:
         if self.darkMod:
             glClearColor(0.15, 0.16, 0.21, 1.0)
         else:
-            glClearColor(0.62, 0.64, 0.70 , 1.0)
+            glClearColor(0.70, 0.70, 0.70 , 1.0)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         imgui.new_frame()
 
-        self.EnableDoking()
         if self.show_demo_window:
             self.show_demo_window = imgui.show_demo_window(self.show_demo_window)
         if self.show_demo_window2:
@@ -100,23 +103,25 @@ class IMGUI:
         glfw.swap_buffers(self.glfw_window)
 
     def RenderGUI(self):
+        self.EnableDoking()
+
         # imgui.set_next_window_position(0, 18)
         # imgui.set_next_window_size(self.windowWidth/3, self.windowHeigh/2)
-        imgui.begin("Debugging:")
-        # imgui.text(self.debugging)
-        for i in range(len(self.network.NeuronGroups)):
-            if (imgui.button("N"+str(i))):
-                self.debugging=""
-                self.debugging += str(self.network.NeuronGroups[i].trace)
-            imgui.same_line()
-        imgui.separator()
+        if self.show_debuggin:
+            imgui.begin("Debugging:")
+            for i in range(len(self.network.NeuronGroups)):
+                if (imgui.button("N"+str(i))):
+                    self.debugging=""
+                    self.debugging += str(self.network.NeuronGroups[i].trace)
+                imgui.same_line()
+            imgui.separator()
 
-        changed, self.debugging = imgui.input_text_multiline(
-            'Message:',
-            self.debugging,
-            size = imgui.ImVec2(0, 0),
-            )
-        imgui.end()
+            changed, self.debugging = imgui.input_text_multiline(
+                'Message:',
+                self.debugging,
+                size = imgui.ImVec2(0, 0),
+                )
+            imgui.end()
 
 
 
@@ -169,18 +174,18 @@ class IMGUI:
 
 
 
-        # if imgui.begin_main_menu_bar():
-        #     if imgui.begin_menu('Setting', True):
-        #         if imgui.begin_menu('Style', True):
-        #             if imgui.menu_item('Dark', None, False, True)[0]:
-        #                 self.darkMod = True
-        #                 imgui.style_colors_dark()
-        #             if imgui.menu_item('Light', None, False, True)[0]:
-        #                 self.darkMod = False
-        #                 imgui.style_colors_light()
-        #             imgui.end_menu()
-        #         imgui.end_menu()
-        # imgui.end_main_menu_bar()
+        if imgui.begin_main_menu_bar():
+            if imgui.begin_menu('Setting', True):
+                if imgui.begin_menu('Style', True):
+                    if imgui.menu_item('Dark', None, False, True)[0]:
+                        self.darkMod = True
+                        imgui.style_colors_dark()
+                    if imgui.menu_item('Light', None, False, True)[0]:
+                        self.darkMod = False
+                        imgui.style_colors_light()
+                    imgui.end_menu()
+                imgui.end_menu()
+        imgui.end_main_menu_bar()
 
 
         imgui.begin("NeuronGroups:")
@@ -189,25 +194,19 @@ class IMGUI:
             # imgui.separator_text("NeuronGroup {0}".format(str(i)))
             # imgui.same_line()
             if self.shows[i]:
-                # if i>2:
-
                 if (imgui.image_button("hide"*(i+1),self.eyetextureID[i],imgui.ImVec2(25,25))):
                     self.shows[i]=0
-                    pass
             else:
-                # if (imgui.button("<",25,25)):
                 if (imgui.image_button("show"*(i+1),self.closeEyetextureID[i],imgui.ImVec2(25,25))):
-                    # print(i)
                     self.shows[i]=1
-                    pass
             imgui.same_line(spacing=1.0)
             # if (imgui.button("+",25,25)):
             if (imgui.image_button("new_window"*(i+1),self.arrowtextureID[i],imgui.ImVec2(25,25))):
                 newWindow = NeuronWindow(800,600,self,i)
                 self.NeuronWindows.append(newWindow)
-            imgui.same_line(spacing=1.0)
-            if (imgui.image_button("info"*(i+1),self.settingtextureID[i],imgui.ImVec2(25,25))):
-                pass
+            # imgui.same_line(spacing=1.0)
+            # if (imgui.image_button("info"*(i+1),self.settingtextureID[i],imgui.ImVec2(25,25))):
+            #     pass
 
             
             # if (imgui.tree_node("Window "+str(i))):
@@ -273,8 +272,8 @@ class IMGUI:
             imgui.end()
     def EnableDoking(self):
             viewport = imgui.get_main_viewport()
-            imgui.set_next_window_pos(viewport.work_pos)
-            imgui.set_next_window_size(viewport.work_size)
+            imgui.set_next_window_pos(viewport.pos)
+            imgui.set_next_window_size(viewport.size)
             imgui.set_next_window_viewport(viewport.id_)
             imgui.push_style_var(imgui.StyleVar_.window_rounding, 0.0)
             imgui.push_style_var(imgui.StyleVar_.window_border_size, 0.0)
@@ -287,7 +286,7 @@ class IMGUI:
             imgui.pop_style_var()
             imgui.pop_style_var(2)
             dockspace_id = imgui.get_id("MyDockSpace")
-            imgui.dock_space(dockspace_id, imgui.ImVec2(0.0, 0.0), 8)
+            imgui.dock_space(dockspace_id, imgui.ImVec2(0.0, 0.0),  imgui.DockNodeFlags_.passthru_central_node)
             imgui.end()
     def ImGuiAddWindow(self,window,text,P_open = False):
         imgui.push_style_var(imgui.StyleVar_.window_padding, imgui.ImVec2(0,0))
