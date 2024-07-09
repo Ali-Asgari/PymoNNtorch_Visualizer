@@ -243,13 +243,14 @@ class IMGUI:
         xxxx = np.arange(0, 101, 1.0)
         if implot.begin_plot("Plot"):
             implot.setup_axes("iteration", "trace G:%s, R:%s, C:%s"%(self.selectedGroup,self.selectedY,self.selectedX));
+            implot.setup_axis_limits(implot.ImAxis_.y1,float(0),float(2))
             # print("x:",x)
             # print("y:",self.oneVertexTrace)
             # implot.setup_axes_limits(0, 100, 0, 500);
 
-            implot.plot_line("Trace",xxxx, self.oneVertexTrace,101)
-            implot.set_next_marker_style(implot.Marker_.circle, 2, implot.get_colormap_color(1), -1, implot.get_colormap_color(1));
-            implot.plot_scatter("Trace",xxxx, self.oneVertexTrace,100)
+            implot.set_next_marker_style(implot.Marker_.circle, 2, implot.get_colormap_color(1), -1, implot.get_colormap_color(1))
+            implot.set_next_line_style(implot.get_colormap_color(1))
+            implot.plot_line("Trace",xxxx, self.oneVertexTrace,100)
             # implot.plot_line("y2", x, y2)
             implot.end_plot()
         imgui.end()
