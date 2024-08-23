@@ -23,7 +23,9 @@ class GUI(IMGUI):
         self.width,self.height = width,height
         self.network = network
         self.network.simulate_iteration()
-        self.network.clear_recorder()
+        
+        # self.network.clear_recorder()
+
         # for ng in network.NeuronGroups:
         #     # self.tensor = getattr(ng,'trace')
         #     self.tensor = ng.trace
