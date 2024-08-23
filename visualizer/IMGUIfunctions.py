@@ -32,6 +32,9 @@ class IMGUI:
         self.show_demo_window = False
         self.show_demo_window2 = False
         self.show_debuggin = False
+        self.show_raster = len(self.network["EventRecorder"]) != 0
+        self.autoMove = [True] * len(self.network["EventRecorder"]) 
+        self.rasterPrevNumIter= [100] * len(self.network["EventRecorder"]) 
     def initIcon(self):
         def opentIcon(location):
             img = Image.open(location)
@@ -271,6 +274,36 @@ class IMGUI:
             imgui.text("depth: %i"%ceil((self.tensorWidths[self.NeuronWindows[w].NeuronIndex]/self.NeuronWindows[w].widthNeuron)*(self.tensorHeights[self.NeuronWindows[w].NeuronIndex]/self.NeuronWindows[w].heightNeuron)))
 
             imgui.end()
+
+        if self.show_raster:
+            for i in range(len(self.network["EventRecorder"])):
+                imgui.begin("Raster Plot"+str(i))
+                _,self.autoMove[i] = imgui.checkbox("Auto Move",self.autoMove[i])
+                if self.autoMove[i]:
+                    imgui.text("Number of previous iteration:")
+                    _,self.rasterPrevNumIter[i] = imgui.input_int("       ",self.rasterPrevNumIter[i])
+                    if self.rasterPrevNumIter[i] < 0: self.rasterPrevNumIter[i] = 0
+                if implot.begin_plot("Raster Plot "+ self.network["EventRecorder", i].tag):
+                    a = self.network["EventRecorder", i].variables["spikes"]
+                    # a[:,0], a[:,1]
+                    # if imgui.button("prrrr"):
+                    #     print(a[-20:])
+
+                    # implot.set_axes(implot.AxisFlags_.no_label,implot.AxisFlags_.no_label)
+                    implot.setup_axes("Iteration", "Neuron")
+                    if self.autoMove[i]:
+                        implot.setup_axis_limits(implot.ImAxis_.x1,float(self.iteration-self.rasterPrevNumIter[i]),float(self.iteration),implot.Cond_.always)#,float(0),float(100))
+                    # implot.setup_axis_limits(implot.ImAxis_.y1,float(0),float(100))#,float(0),float(100))
+                    color_map = implot.get_colormap_color(0)
+                    implot.set_next_marker_style(implot.Marker_.circle, 2, color_map, -1, color_map);
+
+                    implot.plot_scatter("Spikes",a[-10000:,0].cpu().numpy().astype(np.float32), a[-10000:,1].cpu().numpy().astype(np.float32),1000000)
+                    # implot.plot_scatter("Spikes",self.network["spikes", 0][:,0].cpu().numpy().astype(np.float32), self.network["spikes", 0][:,1].cpu().numpy().astype(np.float32),1000000)
+                    
+
+                    # implot.plot_line("y2", x, y2)
+                    implot.end_plot()
+                imgui.end()
     def EnableDoking(self):
             viewport = imgui.get_main_viewport()
             imgui.set_next_window_pos(viewport.pos)
