@@ -99,14 +99,6 @@ class GUI(IMGUI):
         self.shows = []
         
 
-        ##  Callback function for window resize
-        # def framebuffer_size_callback(window, width, height):
-        #     glViewport(0, 0, width, height)
-        #     self.windowWidth = width
-        #     self.windowHeigh = height
-        #     glUniform1f(self.uniform_location_size_data, self.windowWidth/8.5)
-        
-
         
 
 
@@ -179,7 +171,6 @@ class GUI(IMGUI):
         ## find uniform locations
         self.uniform_location_z = glGetUniformLocation(self.shader_program, "uZ")
         self.uniform_location_size = glGetUniformLocation(self.shader_program, "uSize")
-        self.uniform_location_size_data = glGetUniformLocation(self.shader_program, "uSizeData")
         self.uniform_location_locx = glGetUniformLocation(self.shader_program, "uLocx")
         self.uniform_location_locy = glGetUniformLocation(self.shader_program, "uLocy")
         self.uniform_location_loc_mac_x = glGetUniformLocation(self.shader_program, "uLocMacanx")
@@ -287,16 +278,7 @@ class GUI(IMGUI):
         glUseProgram(self.shader_program)
         glUniform1f(self.uniform_location_size, 5.0)
 
-        # if self.tensorHeight*self.tensorWidth<=100:
-        #     glUniform1f(self.uniform_location_size, 40.0)
-        # elif self.tensorHeight*self.tensorWidth<=200:
-        #     glUniform1f(self.uniform_location_size, 25.0)
-        # elif self.tensorHeight*self.tensorWidth<=10000:
-        #     glUniform1f(self.uniform_location_size, 5.0)
-        # else:
-        #     glUniform1f(self.uniform_location_size, 0.25)
-        #     self.set_enable_smooth = False
-        # glUniform1f(self.uniform_location_size_data, self.windowWidth/8.5)
+        
 
 
         self.MainWindow = MainWindow(self.width, self.height, self)

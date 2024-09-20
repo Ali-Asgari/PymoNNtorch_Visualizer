@@ -13,7 +13,6 @@ uniform float uNumColInOne;
 
 uniform float uZ;
 uniform float uSize;
-uniform float uSizeData;
 uniform float uLocx;
 uniform float uLocy;
 uniform float uLocMacanx;
