@@ -177,7 +177,6 @@ class GUI(IMGUI):
         glDeleteShader(fragment_shader)
 
         ## find uniform locations
-        self.uniform_location_isdata = glGetUniformLocation(self.shader_program, "uIsdata")
         self.uniform_location_z = glGetUniformLocation(self.shader_program, "uZ")
         self.uniform_location_size = glGetUniformLocation(self.shader_program, "uSize")
         self.uniform_location_size_data = glGetUniformLocation(self.shader_program, "uSizeData")

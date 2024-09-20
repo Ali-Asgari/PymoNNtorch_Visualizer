@@ -87,6 +87,5 @@ class NeuronWindow(Window):
         #     glEnable(GL_POINT_SMOOTH)
         # else:
         #     glDisable(GL_POINT_SMOOTH)
-        glUniform1f(self.upper.uniform_location_isdata, 0.0)
         glDrawArrays(GL_POINTS, 0, self.upper.tensorHeights[self.NeuronIndex]*self.upper.tensorWidths[self.NeuronIndex])
         glUniform1f(self.upper.uniform_location_isNewWindow,0)

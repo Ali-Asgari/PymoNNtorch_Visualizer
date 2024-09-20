@@ -65,7 +65,6 @@ class MainWindow(Window):
             #     glEnable(GL_POINT_SMOOTH)
             # else:
             #     glDisable(GL_POINT_SMOOTH)
-            glUniform1f(self.upper.uniform_location_isdata, 0.0)
             glDrawArrays(GL_POINTS, 0, self.upper.tensorHeights[n]*self.upper.tensorWidths[n])
 
 
@@ -74,7 +73,6 @@ class MainWindow(Window):
         
     def addQuad(self,z_value,n):
         glUniform1f(self.upper.uniform_location_z, z_value)
-        glUniform1f(self.upper.uniform_location_isdata, 0.0)
         # glUseProgram(0)
         glUniform1f(self.upper.uniform_location_isplan,1.0)
         glLineWidth(2.0)
