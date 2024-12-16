@@ -39,7 +39,7 @@ For two thread use this code (recommended):
 
 **Note:** 
 
-    Networks on both CPU and GPU (CUDA) can be visualized. Moreover there is no need of transfering data between CPU and GPU for visualization on GPU networks (except plots).
+    Networks on both the CPU and GPU (CUDA) can be visualized. Moreover, there is no need to transfer data between the CPU and GPU for visualizing GPU networks, except for their plots (e.g., raster and trace).
 
 
 ===========
