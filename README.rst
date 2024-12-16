@@ -1,11 +1,8 @@
 Visualization 
 --------------
-For using visualization first initialize network on CUDA:
-
+For using visualization first initialize network:
 
 .. code-block:: python
-
-    from visualizer.Visualize_OpenGL_IMGUI import GUI
 
     net = Network(dtype=torch.float32,device='cuda')
     .
@@ -15,17 +12,32 @@ For using visualization first initialize network on CUDA:
     net.initialize()
 
 
-After use these codes:
+Then import ``GUI`` class:
 
+.. code-block:: python
+
+    from visualizer.Visualize_OpenGL_IMGUI import GUI
+
+
+You can choose to run network and visualizer on a single thread or two seprate threads.
+
+For single thread use this code:
 
 .. code-block:: python
 
     GUI(net).initializeOpenGL()
 
-``example_gui.py`` is simple network with GUI :
+For two thread use this code (recommended):
+
+.. code-block:: python
+
+    GUI(net).MultiThreadRun()
+
+``example_gui_with_raster.py`` is simple network with GUI with raster plots:
 
 .. image:: https://ali-asgari.github.io/assets/images/Neuroscience.png
 
+.. note:: Networks on both CPU and GPU (CUDA) can be visualized. Moreover there is no need of transfering data to cpu for visualization on GPU.
 
 
 ===========
