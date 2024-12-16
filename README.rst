@@ -37,7 +37,9 @@ For two thread use this code (recommended):
 
 .. image:: https://ali-asgari.github.io/assets/images/Neuroscience.png
 
-**Note:** Networks on both CPU and GPU (CUDA) can be visualized. Moreover there is no need of transfering data between CPU and GPU for visualization on GPU networks (except plots).
+**Note:** 
+
+    Networks on both CPU and GPU (CUDA) can be visualized. Moreover there is no need of transfering data between CPU and GPU for visualization on GPU networks (except plots).
 
 
 ===========
