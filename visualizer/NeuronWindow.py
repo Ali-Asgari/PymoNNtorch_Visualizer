@@ -9,8 +9,8 @@ class NeuronWindow(Window):
         # self.widthNeuron = self.upper.tensorWidths[self.NeuronIndex]
         # self.heightNeuron = self.upper.tensorHeights[self.NeuronIndex]
         # self.depthNeuron = 1
-        self.widthNeuron = self.upper.network.NeuronGroups[self.NeuronIndex].width
-        self.heightNeuron = self.upper.network.NeuronGroups[self.NeuronIndex].height
+        self.widthNeuron = getattr(self.upper.network.NeuronGroups[self.NeuronIndex],"width",self.upper.tensorWidths[NeuronIndex])
+        self.heightNeuron = getattr(self.upper.network.NeuronGroups[self.NeuronIndex],"heigh",self.upper.tensorHeights[NeuronIndex])
 
 
     def Draw(self):
