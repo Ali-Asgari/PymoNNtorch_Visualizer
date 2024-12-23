@@ -184,9 +184,9 @@ class GUI(IMGUI):
         self.uniform_location_num_col = glGetUniformLocation(self.shader_program,"uCol")
         self.uniform_location_num_col_in_one = glGetUniformLocation(self.shader_program,"uNumColInOne")
 
-        self.vaos = glGenVertexArrays(len(self.network.NeuronGroups))
-        self.vbos = glGenBuffers(len(self.network.NeuronGroups))
-        self.colors = glGenTextures(len(self.network.NeuronGroups))
+        self.vaos = [glGenVertexArrays(1)] if len(self.network.NeuronGroups) == 1 else glGenVertexArrays(len(self.network.NeuronGroups))
+        self.vbos = [glGenBuffers(1)] if len(self.network.NeuronGroups) == 1 else glGenBuffers(len(self.network.NeuronGroups))
+        self.colors = [glGenTextures(1)]  if len(self.network.NeuronGroups) == 1 else glGenTextures(len(self.network.NeuronGroups))
         self.cuda_images = []
         self.tensors = []
         self.tensorHeights = []
